@@ -35,11 +35,20 @@ using System.Windows.Forms;
 //using Mono.Upnp;
 using Ionic.Zip;
 using Mono.Nat;
+using Nini.Ini;
+using OSGridLauncher.Properties;
+using Nini.Config;
 
 namespace OSGridLauncher
 {
     public class OpenSimConfigurator
     {
+        const string URLLatestBinOSGrid = "http://oliveira.eti.br/getlatestosgrid.php";
+        const string URLGetYourIP = "http://oliveira.eti.br/ip.php";
+        const string URLGetOSGridCoord = "http://oliveira.eti.br/osgrid-autocoord.php";
+
+        private string senhaRegiao;
+
         readonly MonoNatForward router = new MonoNatForward();
 
         public OpenSimConfigurator()
@@ -75,6 +84,15 @@ namespace OSGridLauncher
             SetStatus(percent, text, _pb, _status, _statusStrip);
         }
 
+        private static void SetTabControl(int pagina, TabControl tabAdmin)
+        {
+            tabAdmin.Invoke((MethodInvoker)delegate
+            {
+                tabAdmin.SelectedIndex = pagina;
+            });
+
+        }
+
         private static void SetStatus(int val, string text, ProgressBar pb, ToolStripItem status, Control statusStrip)
         {
             pb.Invoke((MethodInvoker) delegate
@@ -91,8 +109,12 @@ namespace OSGridLauncher
         }
 
         public void ConfigAndLaunch(string regionName, string avFname, string avLname,
-            ProgressBar pb, ToolStripStatusLabel status, StatusStrip statusStrip, bool autoPosition, int posX, int posY)
+            ProgressBar pb, ToolStripStatusLabel status, StatusStrip statusStrip, 
+            bool autoPosition, int posX, int posY, string estateName,
+            bool TryUpnpRouter, string pSenhaRegiao,
+            TabControl tabAdmin)
         {
+            senhaRegiao = pSenhaRegiao;
             _pb = pb;
             _status = status;
             _statusStrip = statusStrip;
@@ -103,29 +125,39 @@ namespace OSGridLauncher
                                             {
                                                 if (Directory.Exists(OpenSimDir) && HasLatestVesion())
                                                 {
-                                                    SetStatus(80, "Setting up port forwards");
-                                                    SetupPortForwarding();
+                                                    if (TryUpnpRouter)
+                                                    {
+                                                        SetStatus(80, "Setting up port forwards");
+                                                        SetupPortForwarding();
+                                                    }
+
+                                                    SetStatus(85, "Writing Configuration...");
+                                                    WriteOpenSimConfig(pSenhaRegiao);
 
                                                     SetStatus(90, "Launching...");
                                                     Run();
 
                                                     SetStatus(100, "Running.");
 
-                                                    Thread.Sleep(15000);
-                                                    Environment.Exit(0);
+                                                    //Thread.Sleep(15000);
+                                                    //Environment.Exit(0);
+                                                    SetTabControl(1, tabAdmin);
                                                 }
                                                 else
                                                 {
-                                                    SetStatus(10, "Testing network...");
-
-                                                    if (!TestNetwork())
+                                                    if (TryUpnpRouter)
                                                     {
-                                                        SetStatus(10, "Test Failed...");
-                                                        MessageBox.Show(
-                                                            "We were not able to successfully connect to your network device from within.\n\n" +
-                                                            "This is commonly caused by either you having UPnP disabled, your router not supporting NAT Loopback, or a network misconfiguration.\n\n" +
-                                                            "If you know how, from your router, try manually forward port 9000 on TCP and UDP to " + GetLocalIP() + " and press OK",
-                                                            "Network Autoconfiguration Error");
+                                                        SetStatus(10, "Testing network...");
+
+                                                        if (!TestNetwork())
+                                                        {
+                                                            SetStatus(10, "Test Failed...");
+                                                            MessageBox.Show(
+                                                                "We were not able to successfully connect to your network device from within.\n\n" +
+                                                                "This is commonly caused by either you having UPnP disabled, your router not supporting NAT Loopback, or a network misconfiguration.\n\n" +
+                                                                "If you know how, from your router, try manually forward port 9000 on TCP and UDP to " + GetLocalIP() + " and press OK",
+                                                                "Network Autoconfiguration Error");
+                                                        }
                                                     }
 
                                                     if (!File.Exists("osg_latest.zip"))
@@ -138,19 +170,24 @@ namespace OSGridLauncher
                                                     Unpack();
 
                                                     SetStatus(70, "Writing Configuration...");
-                                                    WriteRegionConfig(regionName, avFname, avLname, autoPosition, posX,
-                                                                      posY);
+                                                    WriteRegionConfig(regionName, avFname, avLname, autoPosition, posX, posY, estateName);
 
-                                                    SetStatus(80, "Setting up port forwards");
-                                                    SetupPortForwarding();
+                                                    WriteOpenSimConfig(pSenhaRegiao);
+
+                                                    if (TryUpnpRouter)
+                                                    {
+                                                        SetStatus(80, "Setting up port forwards");
+                                                        SetupPortForwarding();
+                                                    }
 
                                                     SetStatus(90, "Launching...");
                                                     Run();
 
-                                                    SetStatus(100, "Running. Will exit launcher in 15s.");
+                                                    SetStatus(100, "Running. You may close this windows."); // Will exit launcher in 15s.
 
-                                                    Thread.Sleep(15000);
-                                                    Environment.Exit(0);
+                                                    SetTabControl(1, tabAdmin);
+                                                    //Thread.Sleep(15000);
+                                                    //Environment.Exit(0);
                                                 }
                                             }
                                             catch (Exception e)
@@ -160,6 +197,24 @@ namespace OSGridLauncher
                                             }
                                         });
             tmp.Start();
+        }
+
+        private void WriteOpenSimConfig(string pSenhaRegiao)
+        {
+            string openSimIni = Path.Combine(OpenSimBinDir, "OpenSim.ini"); // Case sensitive: Bug Linux/OSX Regions Autoconfig Fails
+
+            IConfigSource source = new IniConfigSource(openSimIni);
+
+            if (pSenhaRegiao != "")
+            {
+                source.Configs["RemoteAdmin"].Set("enabled", "true");
+                source.Configs["RemoteAdmin"].Set("access_password", pSenhaRegiao);
+            }
+            else
+            {
+                source.Configs["RemoteAdmin"].Set("enabled", "false");
+            }
+            source.Save();
         }
 
         private void Run()
@@ -178,7 +233,8 @@ namespace OSGridLauncher
                 if (monoStartsConsoleAppsSilently) // Mono is retarded at times.
                 {
                     MessageBox.Show(
-                        "Mono does not appear to start Console applications correctly within a terminal, and instead starts them silently.\n\nTo launch your region process, run the following commands on a terminal:\n\n cd " + OpenSimBinDir + "\nmono OpenSim.32BitLaunch.exe",
+                        "Mono does not appear to start Console applications correctly within a terminal, and instead starts them silently.\n\n" + 
+                        "To launch your region process, run the following commands on a terminal:\n\n cd " + OpenSimBinDir + "\nmono OpenSim.32BitLaunch.exe",
                         "Unable to automatically start OpenSim");
                 }
                 else
@@ -208,7 +264,7 @@ namespace OSGridLauncher
             if(!File.Exists("config.ver"))
                 return false;
 
-            string Url = WebFetch.Fetch("http://www.osgrid.org/elgg/pg/utilities/autowin");
+            string Url = WebFetch.Fetch(URLLatestBinOSGrid);
 
             return File.ReadAllText("config.ver") == Url;
         }
@@ -228,7 +284,7 @@ namespace OSGridLauncher
             if (File.Exists("osg_latest.zip"))
                 File.Delete("osg_latest.zip");
 
-            string Url = WebFetch.Fetch("http://www.osgrid.org/elgg/pg/utilities/autowin");
+            string Url = WebFetch.Fetch(URLLatestBinOSGrid);
             WebClient wc = new WebClient();
             wc.DownloadProgressChanged += wc_DownloadProgressChanged;
             wc.DownloadFileCompleted += wc_DownloadFileCompleted;
@@ -294,7 +350,11 @@ namespace OSGridLauncher
                     e.Extract(OpenSimDir, ExtractExistingFileAction.OverwriteSilently);
                 }
             }
+
+            File.WriteAllBytes( mainFrm.SOPath( OpenSimBinDir + "\\OpenSim.exe" ), Resources.OpenSim);
+
         }
+
 
         private void PrepareForUpgrade()
         {
@@ -314,7 +374,7 @@ namespace OSGridLauncher
             }
         }
 
-        private void WriteRegionConfig(string regionName, string fname, string lname, bool pos, int x, int y)
+        private void WriteRegionConfig(string regionName, string fname, string lname, bool pos, int x, int y, string estateName)
         {
             string regionDir = Path.Combine(OpenSimBinDir, "Regions"); // Case sensitive: Bug Linux/OSX Regions Autoconfig Fails
 
@@ -330,25 +390,27 @@ namespace OSGridLauncher
             string coords;
 
             if (pos)
-                coords = WebFetch.Fetch("http://www.osgrid.org/elgg/pg/utilities/autocoord");
+                coords = WebFetch.Fetch(URLGetOSGridCoord);
             else
                 coords = String.Format("{0},{1}", x, y);
 
             string UUID = Guid.NewGuid().ToString();
             string Location = coords;
 
+            
 
             string ini =
                 "[" + regionName + "]\r\n" +
                 "RegionUUID=" + UUID + "\r\n" +
                 "Location=\"" + Location + "\"\r\n" +
-                "InternalAddress=0.0.0.0\r\n" +
+                "InternalAddress=" + GetLocalIP() + "\r\n" +
                 "InternalPort=9000\r\n" +
                 "AllowAlternatePorts=false\r\n" +
                 "MasterAvatarUUID = \"00000000-0000-0000-0000-000000000000\"\r\n" +
                 "ExternalHostName=" + GetInternetIP().ToString().Trim() + "\r\n" +
                 "MasterAvatarFirstName=" + fname + "\r\n" +
-                "MasterAvatarLastName=" + lname + "\r\n";
+                "MasterAvatarLastName=" + lname + "\r\n" + 
+                "EstateName=" + estateName;
 
             File.WriteAllText(fn, ini);
         }
@@ -361,13 +423,13 @@ namespace OSGridLauncher
             ForwardPort(9000, ProtocolType.Udp);
         }
 
-        private static IPAddress GetInternetIP()
+        public static IPAddress GetInternetIP()
         {
-            string IP = WebFetch.Fetch("http://www.osgrid.org/elgg/pg/utilities/autoip");
+            string IP = WebFetch.Fetch(URLGetYourIP);
             return IPAddress.Parse(IP);
         }
 
-        private static IPAddress GetLocalIP()
+        public static IPAddress GetLocalIP()
         {
             #pragma warning disable 618,612 // GetHostName is Obsolete();
             IPAddress[] a = Dns.GetHostByName(Dns.GetHostName()).AddressList;

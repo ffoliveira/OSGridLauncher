@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSGridLauncher", "OSGridLauncher\OSGridLauncher.csproj", "{68DFF3B4-00E6-4B7B-ACB6-EBD18343C206}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{B01E6498-3C2A-4810-B6E0-E20A1C9BB4A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xmlrpc", "..\..\xmlrpc\src\xmlrpc.csproj", "{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{B01E6498-3C2A-4810-B6E0-E20A1C9BB4A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B01E6498-3C2A-4810-B6E0-E20A1C9BB4A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B01E6498-3C2A-4810-B6E0-E20A1C9BB4A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B4B0A58-0AFB-4090-91DD-18912CC7DE65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
