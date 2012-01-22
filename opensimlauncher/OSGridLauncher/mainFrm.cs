@@ -115,9 +115,15 @@ namespace OSGridLauncher
                     textBoxX.Text = locs[0];
                     textBoxY.Text = locs[1];
 
-                    edtAvatarName.Text = source.Configs[0].GetString("MasterAvatarFirstName");
-                    edtAvatarFamilyName.Text = source.Configs[0].GetString("MasterAvatarLastName");
-                    edtEstateName.Text = source.Configs[0].GetString("EstateName");
+                    string estateOwner = source.Configs[0].GetString("EstateOwner", "");
+                    string[] ownerNames = estateOwner.Split(',');
+
+                    if (ownerNames.Length == 2)
+                    {
+                      edtAvatarName.Text = ownerNames[0];
+                      edtAvatarFamilyName.Text = ownerNames[1];
+                    }
+                    edtEstateName.Text = source.Configs[0].GetString("EstateName", "");
                 }
 
                 checkBoxAutoposition.Enabled = false;

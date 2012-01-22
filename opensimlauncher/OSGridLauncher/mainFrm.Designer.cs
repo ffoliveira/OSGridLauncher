@@ -70,20 +70,20 @@
             this.chkTryChangeRouter = new System.Windows.Forms.CheckBox();
             this.pgcAdminRegiao = new System.Windows.Forms.TabControl();
             this.tbsConfiguracao = new System.Windows.Forms.TabPage();
+            this.pnlLancamento = new System.Windows.Forms.Panel();
             this.tbsAdministracao = new System.Windows.Forms.TabPage();
+            this.btnBackupOAR = new System.Windows.Forms.Button();
+            this.btnShutdown = new System.Windows.Forms.Button();
             this.edtNomeRegiao2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.pnlLancamento = new System.Windows.Forms.Panel();
-            this.btnShutdown = new System.Windows.Forms.Button();
-            this.btnBackupOAR = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsorButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsor2Button)).BeginInit();
             this.pgcAdminRegiao.SuspendLayout();
             this.tbsConfiguracao.SuspendLayout();
-            this.tbsAdministracao.SuspendLayout();
             this.pnlLancamento.SuspendLayout();
+            this.tbsAdministracao.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -215,6 +215,7 @@
             this.chkUpdateIPS.TabIndex = 12;
             this.chkUpdateIPS.Text = "Auto-update my config with these IPs";
             this.chkUpdateIPS.UseVisualStyleBackColor = true;
+            this.chkUpdateIPS.Visible = false;
             // 
             // label9
             // 
@@ -451,9 +452,9 @@
             this.chkTryChangeRouter.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkTryChangeRouter.Location = new System.Drawing.Point(222, 167);
             this.chkTryChangeRouter.Name = "chkTryChangeRouter";
-            this.chkTryChangeRouter.Size = new System.Drawing.Size(200, 17);
+            this.chkTryChangeRouter.Size = new System.Drawing.Size(297, 17);
             this.chkTryChangeRouter.TabIndex = 11;
-            this.chkTryChangeRouter.Text = "Try to auto-config the router mapping";
+            this.chkTryChangeRouter.Text = "Try to configure my Router using uPNP (must be enabled)";
             this.chkTryChangeRouter.UseVisualStyleBackColor = true;
             // 
             // pgcAdminRegiao
@@ -506,6 +507,16 @@
             this.tbsConfiguracao.Text = "Configuration Information";
             this.tbsConfiguracao.UseVisualStyleBackColor = true;
             // 
+            // pnlLancamento
+            // 
+            this.pnlLancamento.Controls.Add(this.progressBar1);
+            this.pnlLancamento.Controls.Add(this.btnStart);
+            this.pnlLancamento.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlLancamento.Location = new System.Drawing.Point(3, 253);
+            this.pnlLancamento.Name = "pnlLancamento";
+            this.pnlLancamento.Size = new System.Drawing.Size(534, 31);
+            this.pnlLancamento.TabIndex = 10;
+            // 
             // tbsAdministracao
             // 
             this.tbsAdministracao.Controls.Add(this.btnBackupOAR);
@@ -519,6 +530,26 @@
             this.tbsAdministracao.TabIndex = 1;
             this.tbsAdministracao.Text = "Region Administration";
             this.tbsAdministracao.UseVisualStyleBackColor = true;
+            // 
+            // btnBackupOAR
+            // 
+            this.btnBackupOAR.Location = new System.Drawing.Point(138, 93);
+            this.btnBackupOAR.Name = "btnBackupOAR";
+            this.btnBackupOAR.Size = new System.Drawing.Size(197, 23);
+            this.btnBackupOAR.TabIndex = 7;
+            this.btnBackupOAR.Text = "Backup to OAR File";
+            this.btnBackupOAR.UseVisualStyleBackColor = true;
+            this.btnBackupOAR.Click += new System.EventHandler(this.btnBackupOAR_Click);
+            // 
+            // btnShutdown
+            // 
+            this.btnShutdown.Location = new System.Drawing.Point(138, 43);
+            this.btnShutdown.Name = "btnShutdown";
+            this.btnShutdown.Size = new System.Drawing.Size(197, 23);
+            this.btnShutdown.TabIndex = 6;
+            this.btnShutdown.Text = "Shutdown the Region";
+            this.btnShutdown.UseVisualStyleBackColor = true;
+            this.btnShutdown.Click += new System.EventHandler(this.btnShutdown_Click);
             // 
             // edtNomeRegiao2
             // 
@@ -536,36 +567,6 @@
             this.label13.Size = new System.Drawing.Size(72, 13);
             this.label13.TabIndex = 4;
             this.label13.Text = "Region Name";
-            // 
-            // pnlLancamento
-            // 
-            this.pnlLancamento.Controls.Add(this.progressBar1);
-            this.pnlLancamento.Controls.Add(this.btnStart);
-            this.pnlLancamento.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlLancamento.Location = new System.Drawing.Point(3, 253);
-            this.pnlLancamento.Name = "pnlLancamento";
-            this.pnlLancamento.Size = new System.Drawing.Size(534, 31);
-            this.pnlLancamento.TabIndex = 10;
-            // 
-            // btnShutdown
-            // 
-            this.btnShutdown.Location = new System.Drawing.Point(138, 43);
-            this.btnShutdown.Name = "btnShutdown";
-            this.btnShutdown.Size = new System.Drawing.Size(197, 23);
-            this.btnShutdown.TabIndex = 6;
-            this.btnShutdown.Text = "Shutdown the Region";
-            this.btnShutdown.UseVisualStyleBackColor = true;
-            this.btnShutdown.Click += new System.EventHandler(this.btnShutdown_Click);
-            // 
-            // btnBackupOAR
-            // 
-            this.btnBackupOAR.Location = new System.Drawing.Point(138, 93);
-            this.btnBackupOAR.Name = "btnBackupOAR";
-            this.btnBackupOAR.Size = new System.Drawing.Size(197, 23);
-            this.btnBackupOAR.TabIndex = 7;
-            this.btnBackupOAR.Text = "Backup to OAR File";
-            this.btnBackupOAR.UseVisualStyleBackColor = true;
-            this.btnBackupOAR.Click += new System.EventHandler(this.btnBackupOAR_Click);
             // 
             // mainFrm
             // 
@@ -594,9 +595,9 @@
             this.pgcAdminRegiao.ResumeLayout(false);
             this.tbsConfiguracao.ResumeLayout(false);
             this.tbsConfiguracao.PerformLayout();
+            this.pnlLancamento.ResumeLayout(false);
             this.tbsAdministracao.ResumeLayout(false);
             this.tbsAdministracao.PerformLayout();
-            this.pnlLancamento.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

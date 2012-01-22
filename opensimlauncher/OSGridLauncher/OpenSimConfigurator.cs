@@ -132,7 +132,7 @@ namespace OSGridLauncher
                                                     }
 
                                                     SetStatus(85, "Writing Configuration...");
-                                                    WriteOpenSimConfig(pSenhaRegiao);
+                                                    WriteOpenSimConfig(pSenhaRegiao, avFname + " " + avLname, estateName);
 
                                                     SetStatus(90, "Launching...");
                                                     Run();
@@ -172,7 +172,7 @@ namespace OSGridLauncher
                                                     SetStatus(70, "Writing Configuration...");
                                                     WriteRegionConfig(regionName, avFname, avLname, autoPosition, posX, posY, estateName);
 
-                                                    WriteOpenSimConfig(pSenhaRegiao);
+                                                    WriteOpenSimConfig(pSenhaRegiao, avFname+ " " +avLname, estateName);
 
                                                     if (TryUpnpRouter)
                                                     {
@@ -199,11 +199,16 @@ namespace OSGridLauncher
             tmp.Start();
         }
 
-        private void WriteOpenSimConfig(string pSenhaRegiao)
+        private void WriteOpenSimConfig(string pSenhaRegiao, string pEstateOwnerDefault, string pEstateNameDefault)
         {
             string openSimIni = Path.Combine(OpenSimBinDir, "OpenSim.ini"); // Case sensitive: Bug Linux/OSX Regions Autoconfig Fails
 
             IConfigSource source = new IniConfigSource(openSimIni);
+
+            if (source.Configs["RemoteAdmin"] == null)
+            {
+                source.Configs.Add("RemoteAdmin");
+            }
 
             if (pSenhaRegiao != "")
             {
@@ -214,6 +219,14 @@ namespace OSGridLauncher
             {
                 source.Configs["RemoteAdmin"].Set("enabled", "false");
             }
+
+            if (source.Configs["EstateDefaults"] == null)
+            {
+                source.Configs.Add("EstateDefaults");
+            }
+            source.Configs["EstateDefaults"].Set("EstateName", pEstateNameDefault);
+            source.Configs["EstateDefaults"].Set("EstateOwner", pEstateOwnerDefault);
+
             source.Save();
         }
 
@@ -397,8 +410,6 @@ namespace OSGridLauncher
             string UUID = Guid.NewGuid().ToString();
             string Location = coords;
 
-            
-
             string ini =
                 "[" + regionName + "]\r\n" +
                 "RegionUUID=" + UUID + "\r\n" +
@@ -406,11 +417,7 @@ namespace OSGridLauncher
                 "InternalAddress=" + GetLocalIP() + "\r\n" +
                 "InternalPort=9000\r\n" +
                 "AllowAlternatePorts=false\r\n" +
-                "MasterAvatarUUID = \"00000000-0000-0000-0000-000000000000\"\r\n" +
-                "ExternalHostName=" + GetInternetIP().ToString().Trim() + "\r\n" +
-                "MasterAvatarFirstName=" + fname + "\r\n" +
-                "MasterAvatarLastName=" + lname + "\r\n" + 
-                "EstateName=" + estateName;
+                "ExternalHostName=" + GetInternetIP().ToString().Trim() + "\r\n\r\n";
 
             File.WriteAllText(fn, ini);
         }
