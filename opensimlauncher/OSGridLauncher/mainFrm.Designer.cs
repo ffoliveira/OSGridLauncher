@@ -404,7 +404,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(25, 13);
             this.lblVersion.TabIndex = 10;
-            this.lblVersion.Text = "r0.5";
+            this.lblVersion.Text = "r0.6";
             // 
             // OSGridLaunch
             // 
