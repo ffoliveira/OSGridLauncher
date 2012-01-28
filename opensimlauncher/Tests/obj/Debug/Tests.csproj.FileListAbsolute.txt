@@ -16,3 +16,15 @@ D:\work\OSGL\opensimlauncher\Tests\obj\Debug\ResolveAssemblyReference.cache
 D:\work\OSGL\opensimlauncher\Tests\obj\Debug\Tests.exe
 D:\work\OSGL\opensimlauncher\Tests\obj\Debug\Tests.pdb
 D:\Work\OSGL\opensimlauncher\Tests\bin\Debug\Ionic.Zip.dll
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\Tests.exe
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\Tests.pdb
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\OSGridLauncher.exe
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\CookComputing.XmlRpcV2.dll
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\Mono.Nat.dll
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\Nini.dll
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\Ionic.Zip.dll
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\OSGridLauncher.pdb
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\bin\Debug\CookComputing.XmlRpcV2.pdb
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\obj\Debug\Tests.csprojResolveAssemblyReference.cache
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\obj\Debug\Tests.exe
+C:\home\osgrid\sources\OSGridLauncher.v2\opensimlauncher\Tests\obj\Debug\Tests.pdb

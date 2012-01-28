@@ -13,6 +13,9 @@ namespace OSGridLauncher
         [XmlRpcMethod("admin_save_oar")]
         XmlRpcStruct admin_save_oar(XmlRpcStruct Parameters);
 
+        [XmlRpcMethod("admin_load_oar")]
+        XmlRpcStruct admin_load_oar(XmlRpcStruct Parameters);
+
         [XmlRpcMethod("admin_shutdown")]
         XmlRpcStruct admin_shutdown(XmlRpcStruct Parameters);
     }
@@ -70,7 +73,14 @@ namespace OSGridLauncher
 
             RemoteOpensim admin = XmlRpcProxyGen.Create<RemoteOpensim>();
 
-            saveAccept = admin.admin_save_oar(saveParms);
+            try
+            {
+                saveAccept = admin.admin_save_oar(saveParms);
+            }
+            catch
+            {
+                return false;
+            }
 
             bool retShut = true;
 
@@ -84,6 +94,31 @@ namespace OSGridLauncher
                 }
             }
             */
+
+            return retShut;
+        }
+
+        public bool admin_restore_oar(string password, string nomeRegiao, string oarfile)
+        {
+            XmlRpcStruct saveAccept = new XmlRpcStruct();
+            XmlRpcStruct saveParms = new XmlRpcStruct();
+
+            saveParms.Add("password", password);
+            saveParms.Add("region_name", nomeRegiao);
+            saveParms.Add("filename", oarfile);
+
+            RemoteOpensim admin = XmlRpcProxyGen.Create<RemoteOpensim>();
+
+            try
+            {
+                saveAccept = admin.admin_load_oar(saveParms);
+            }
+            catch
+            {
+                return false;
+            }
+
+            bool retShut = true;
 
             return retShut;
         }

@@ -35,12 +35,21 @@ namespace OSGridLauncher
     {
         private string iniFileRegiao;
         private string iniFileOpenSim;
+        private string oarDir;
 
         private string senhaRegiao = "A17533g82Ol";
 
         public mainFrm()
         {
             InitializeComponent();
+
+            oarDir = SOPath(Environment.CurrentDirectory + "\\oarfiles");
+
+            if (!File.Exists(oarDir))
+            {
+                Directory.CreateDirectory(oarDir);
+            }
+            ReloadOARFileList();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -105,25 +114,30 @@ namespace OSGridLauncher
                 iniFileRegiao = SOPath(Environment.CurrentDirectory + "\\opensim\\bin\\Regions\\RegionConfig.ini");
                 iniFileOpenSim = SOPath(Environment.CurrentDirectory + "\\opensim\\bin\\OpenSim.ini");
 
-                IConfigSource source = new IniConfigSource(iniFileRegiao);
+                IConfigSource oIniRegion = new IniConfigSource(iniFileRegiao);
 
-                if (source.Configs.Count > 0)
+                if (oIniRegion.Configs.Count > 0)
                 {
-                    edtNomeRegiao.Text = source.Configs[0].Name;
+                    edtNomeRegiao.Text = oIniRegion.Configs[0].Name;
 
-                    string[] locs = source.Configs[0].GetString("Location").Split(',');
+                    string[] locs = oIniRegion.Configs[0].GetString("Location").Split(',');
                     textBoxX.Text = locs[0];
                     textBoxY.Text = locs[1];
+                }
 
-                    string estateOwner = source.Configs[0].GetString("EstateOwner", "");
-                    string[] ownerNames = estateOwner.Split(',');
+                IConfigSource oIniOS = new IniConfigSource(iniFileOpenSim);
+
+                if (oIniOS.Configs["EstateDefaults"] != null)
+                {
+                    string estateOwner = oIniOS.Configs["EstateDefaults"].GetString("EstateOwner", "");
+                    string[] ownerNames = estateOwner.Split(' ');
 
                     if (ownerNames.Length == 2)
                     {
-                      edtAvatarName.Text = ownerNames[0];
-                      edtAvatarFamilyName.Text = ownerNames[1];
+                        edtAvatarName.Text = ownerNames[0];
+                        edtAvatarFamilyName.Text = ownerNames[1];
                     }
-                    edtEstateName.Text = source.Configs[0].GetString("EstateName", "");
+                    edtEstateName.Text = oIniOS.Configs["EstateDefaults"].GetString("EstateName", "");
                 }
 
                 checkBoxAutoposition.Enabled = false;
@@ -349,6 +363,24 @@ namespace OSGridLauncher
         private void pgcAdminRegiao_SelectedIndexChanged(object sender, EventArgs e)
         {
             edtNomeRegiao2.Text = edtNomeRegiao.Text;
+
+            if (pgcAdminRegiao.SelectedTab == tbsConfiguracao)
+            {
+                ReloadOARFileList();
+            }
+        }
+
+        private void ReloadOARFileList()
+        {
+            lsbArquivosBackup.Items.Clear();
+            string[] arqOARs = Directory.GetFiles(oarDir);
+
+            for (int iOar = 0; iOar < arqOARs.Length; iOar++)
+            {
+                lsbArquivosBackup.Items.Add( Path.GetFileName(arqOARs[iOar]) );
+            }
+
+            btnRestoreOAR.Enabled = false;
         }
 
         private void btnShutdown_Click(object sender, EventArgs e)
@@ -368,24 +400,43 @@ namespace OSGridLauncher
         private void btnBackupOAR_Click(object sender, EventArgs e)
         {
             string nomeOAR = String.Format("{0:yyyy-MM-dd-HH-mm}.oar", DateTime.Now);
-            string oarDir = SOPath(Environment.CurrentDirectory + "\\oarfiles");
-
-            if (!File.Exists(oarDir))
-            {
-                Directory.CreateDirectory(oarDir);
-            }
 
             OSRemoteAdmin osr = new OSRemoteAdmin();
 
             if (osr.admin_save_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(oarDir+"\\"+nomeOAR)))
             {
                 MessageBox.Show(String.Format("OAR Backup is running. File : {0}", nomeOAR));
+                ReloadOARFileList();
             }
             else
             {
                 MessageBox.Show("OAR Backup wasn't accepted by the simulator");
             }
 
+        }
+
+        private void btnRestoreOAR_Click(object sender, EventArgs e)
+        {
+            string nomeOAR = lsbArquivosBackup.Items[lsbArquivosBackup.SelectedIndex].ToString();
+
+            if (MessageBox.Show(String.Format("Confirm restore the OAR file {0} ?\n\nCurrent content will be LOST !", nomeOAR), "Restore OAR File", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                OSRemoteAdmin osr = new OSRemoteAdmin();
+
+                if (osr.admin_restore_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(oarDir+"\\"+nomeOAR)))
+                {
+                    MessageBox.Show(String.Format("OAR Restore is running. File : {0}", nomeOAR));
+                }
+                else
+                {
+                    MessageBox.Show("OAR Restore wasn't accepted by the simulator");
+                }
+            }
+        }
+
+        private void lsbArquivosBackup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnRestoreOAR.Enabled = (lsbArquivosBackup.SelectedIndex >= 0);
         }
 
     }

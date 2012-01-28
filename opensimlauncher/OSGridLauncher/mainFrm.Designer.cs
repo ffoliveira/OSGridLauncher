@@ -76,6 +76,9 @@
             this.btnShutdown = new System.Windows.Forms.Button();
             this.edtNomeRegiao2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.lsbArquivosBackup = new System.Windows.Forms.ListBox();
+            this.btnRestoreOAR = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsorButton)).BeginInit();
@@ -404,7 +407,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(25, 13);
             this.lblVersion.TabIndex = 10;
-            this.lblVersion.Text = "r0.6";
+            this.lblVersion.Text = "r0.7";
             // 
             // OSGridLaunch
             // 
@@ -448,8 +451,6 @@
             // chkTryChangeRouter
             // 
             this.chkTryChangeRouter.AutoSize = true;
-            this.chkTryChangeRouter.Checked = true;
-            this.chkTryChangeRouter.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkTryChangeRouter.Location = new System.Drawing.Point(222, 167);
             this.chkTryChangeRouter.Name = "chkTryChangeRouter";
             this.chkTryChangeRouter.Size = new System.Drawing.Size(297, 17);
@@ -519,6 +520,9 @@
             // 
             // tbsAdministracao
             // 
+            this.tbsAdministracao.Controls.Add(this.label14);
+            this.tbsAdministracao.Controls.Add(this.btnRestoreOAR);
+            this.tbsAdministracao.Controls.Add(this.lsbArquivosBackup);
             this.tbsAdministracao.Controls.Add(this.btnBackupOAR);
             this.tbsAdministracao.Controls.Add(this.btnShutdown);
             this.tbsAdministracao.Controls.Add(this.edtNomeRegiao2);
@@ -533,7 +537,8 @@
             // 
             // btnBackupOAR
             // 
-            this.btnBackupOAR.Location = new System.Drawing.Point(138, 93);
+            this.btnBackupOAR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBackupOAR.Location = new System.Drawing.Point(334, 93);
             this.btnBackupOAR.Name = "btnBackupOAR";
             this.btnBackupOAR.Size = new System.Drawing.Size(197, 23);
             this.btnBackupOAR.TabIndex = 7;
@@ -543,7 +548,7 @@
             // 
             // btnShutdown
             // 
-            this.btnShutdown.Location = new System.Drawing.Point(138, 43);
+            this.btnShutdown.Location = new System.Drawing.Point(334, 32);
             this.btnShutdown.Name = "btnShutdown";
             this.btnShutdown.Size = new System.Drawing.Size(197, 23);
             this.btnShutdown.TabIndex = 6;
@@ -554,19 +559,53 @@
             // edtNomeRegiao2
             // 
             this.edtNomeRegiao2.Enabled = false;
-            this.edtNomeRegiao2.Location = new System.Drawing.Point(138, 6);
+            this.edtNomeRegiao2.Location = new System.Drawing.Point(86, 6);
             this.edtNomeRegiao2.Name = "edtNomeRegiao2";
-            this.edtNomeRegiao2.Size = new System.Drawing.Size(393, 20);
+            this.edtNomeRegiao2.Size = new System.Drawing.Size(445, 20);
             this.edtNomeRegiao2.TabIndex = 5;
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(25, 9);
+            this.label13.Location = new System.Drawing.Point(8, 9);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(72, 13);
             this.label13.TabIndex = 4;
             this.label13.Text = "Region Name";
+            // 
+            // lsbArquivosBackup
+            // 
+            this.lsbArquivosBackup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lsbArquivosBackup.FormattingEnabled = true;
+            this.lsbArquivosBackup.Location = new System.Drawing.Point(8, 122);
+            this.lsbArquivosBackup.Name = "lsbArquivosBackup";
+            this.lsbArquivosBackup.Size = new System.Drawing.Size(523, 121);
+            this.lsbArquivosBackup.TabIndex = 8;
+            this.lsbArquivosBackup.SelectedIndexChanged += new System.EventHandler(this.lsbArquivosBackup_SelectedIndexChanged);
+            // 
+            // btnRestoreOAR
+            // 
+            this.btnRestoreOAR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRestoreOAR.Enabled = false;
+            this.btnRestoreOAR.Location = new System.Drawing.Point(334, 249);
+            this.btnRestoreOAR.Name = "btnRestoreOAR";
+            this.btnRestoreOAR.Size = new System.Drawing.Size(197, 23);
+            this.btnRestoreOAR.TabIndex = 9;
+            this.btnRestoreOAR.Text = "Restore to OAR File";
+            this.btnRestoreOAR.UseVisualStyleBackColor = true;
+            this.btnRestoreOAR.Click += new System.EventHandler(this.btnRestoreOAR_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label14.Location = new System.Drawing.Point(8, 106);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 13);
+            this.label14.TabIndex = 25;
+            this.label14.Text = "Select the OAR File to Restore";
             // 
             // mainFrm
             // 
@@ -651,6 +690,9 @@
         private System.Windows.Forms.Panel pnlLancamento;
         private System.Windows.Forms.Button btnShutdown;
         private System.Windows.Forms.Button btnBackupOAR;
+        private System.Windows.Forms.ListBox lsbArquivosBackup;
+        private System.Windows.Forms.Button btnRestoreOAR;
+        private System.Windows.Forms.Label label14;
     }
 }
 
