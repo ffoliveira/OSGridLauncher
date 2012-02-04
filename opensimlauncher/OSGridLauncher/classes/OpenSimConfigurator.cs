@@ -35,7 +35,6 @@ using System.Windows.Forms;
 //using Mono.Upnp;
 using Ionic.Zip;
 using Mono.Nat;
-using Nini.Ini;
 using OSGridLauncher.Properties;
 using Nini.Config;
 
@@ -48,6 +47,7 @@ namespace OSGridLauncher
         const string URLGetOSGridCoord = "http://oliveira.eti.br/osgrid-autocoord.php";
 
         private string senhaRegiao;
+        private Process oProcesso;
 
         readonly MonoNatForward router = new MonoNatForward();
 
@@ -112,8 +112,9 @@ namespace OSGridLauncher
             ProgressBar pb, ToolStripStatusLabel status, StatusStrip statusStrip, 
             bool autoPosition, int posX, int posY, string estateName,
             bool TryUpnpRouter, string pSenhaRegiao,
-            TabControl tabAdmin)
+            TabControl tabAdmin, Process pProcesso)
         {
+            oProcesso = pProcesso;
             senhaRegiao = pSenhaRegiao;
             _pb = pb;
             _status = status;
@@ -132,12 +133,12 @@ namespace OSGridLauncher
                                                     }
 
                                                     SetStatus(85, "Writing Configuration...");
-                                                    WriteOpenSimConfig(pSenhaRegiao, avFname + " " + avLname, estateName);
+                                                    WriteOpenSimConfig(pSenhaRegiao, String.Format("{0} {1}", avFname, avLname), estateName);
 
                                                     SetStatus(90, "Launching...");
                                                     Run();
 
-                                                    SetStatus(100, "Running.");
+                                                    SetStatus(100, "Running. It's ready to use."); // Will exit launcher in 15s.
 
                                                     //Thread.Sleep(15000);
                                                     //Environment.Exit(0);
@@ -153,26 +154,24 @@ namespace OSGridLauncher
                                                         {
                                                             SetStatus(10, "Test Failed...");
                                                             MessageBox.Show(
-                                                                "We were not able to successfully connect to your network device from within.\n\n" +
-                                                                "This is commonly caused by either you having UPnP disabled, your router not supporting NAT Loopback, or a network misconfiguration.\n\n" +
-                                                                "If you know how, from your router, try manually forward port 9000 on TCP and UDP to " + GetLocalIP() + " and press OK",
+                                                                String.Format("We were not able to successfully connect to your network device from within.\n\nThis is commonly caused by either you having UPnP disabled, your router not supporting NAT Loopback, or a network misconfiguration.\n\nIf you know how, from your router, try manually forward port 9000 on TCP and UDP to {0} and press OK", GetLocalIP()),
                                                                 "Network Autoconfiguration Error");
                                                         }
                                                     }
 
-                                                    if (!File.Exists("osg_latest.zip"))
-                                                    {
+                                                    //if (!File.Exists("osg_latest.zip"))
+                                                    //{
                                                         SetStatus(20, "Downloading...");
                                                         Download();
-                                                    }
+                                                    //}
 
                                                     SetStatus(60, "Unpacking...");
                                                     Unpack();
 
                                                     SetStatus(70, "Writing Configuration...");
-                                                    WriteRegionConfig(regionName, avFname, avLname, autoPosition, posX, posY, estateName);
+                                                    WriteRegionConfig(regionName, autoPosition, posX, posY);
 
-                                                    WriteOpenSimConfig(pSenhaRegiao, avFname+ " " +avLname, estateName);
+                                                    WriteOpenSimConfig(pSenhaRegiao, String.Format("{0} {1}", avFname, avLname), estateName);
 
                                                     if (TryUpnpRouter)
                                                     {
@@ -183,7 +182,7 @@ namespace OSGridLauncher
                                                     SetStatus(90, "Launching...");
                                                     Run();
 
-                                                    SetStatus(100, "Running. You may close this windows."); // Will exit launcher in 15s.
+                                                    SetStatus(100, "Running. It's ready to use."); // Will exit launcher in 15s.
 
                                                     SetTabControl(1, tabAdmin);
                                                     //Thread.Sleep(15000);
@@ -232,9 +231,7 @@ namespace OSGridLauncher
 
         private void Run()
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
-
-            processStartInfo.WorkingDirectory = OpenSimBinDir;
+            ProcessStartInfo processStartInfo = new ProcessStartInfo() { WorkingDirectory = OpenSimBinDir };
 
             const bool runWithMono = true; // Testing r21
 
@@ -246,8 +243,7 @@ namespace OSGridLauncher
                 if (monoStartsConsoleAppsSilently) // Mono is retarded at times.
                 {
                     MessageBox.Show(
-                        "Mono does not appear to start Console applications correctly within a terminal, and instead starts them silently.\n\n" + 
-                        "To launch your region process, run the following commands on a terminal:\n\n cd " + OpenSimBinDir + "\nmono OpenSim.32BitLaunch.exe",
+                        String.Format("Mono does not appear to start Console applications correctly within a terminal, and instead starts them silently.\n\nTo launch your region process, run the following commands on a terminal:\n\n cd {0}\nmono OpenSim.32BitLaunch.exe", OpenSimBinDir),
                         "Unable to automatically start OpenSim");
                 }
                 else
@@ -263,12 +259,11 @@ namespace OSGridLauncher
 
             try
             {
-                Process.Start(processStartInfo);
+              oProcesso = Process.Start(processStartInfo);
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                MessageBox.Show("Unable to start " + processStartInfo.FileName + " in " +
-                                processStartInfo.WorkingDirectory + ", do both exist?");
+                MessageBox.Show(String.Format("Unable to start {0} in {1}, do both exist?", processStartInfo.FileName, processStartInfo.WorkingDirectory));
             }
         }
 
@@ -277,7 +272,7 @@ namespace OSGridLauncher
             if(!File.Exists("config.ver"))
                 return false;
 
-            string Url = WebFetch.Fetch(URLLatestBinOSGrid);
+            string Url = webfetch.Fetch(URLLatestBinOSGrid);
 
             return File.ReadAllText("config.ver") == Url;
         }
@@ -297,11 +292,13 @@ namespace OSGridLauncher
             if (File.Exists("osg_latest.zip"))
                 File.Delete("osg_latest.zip");
 
-            string Url = WebFetch.Fetch(URLLatestBinOSGrid);
-            WebClient wc = new WebClient();
-            wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-            wc.DownloadFileCompleted += wc_DownloadFileCompleted;
-            wc.DownloadFileAsync(new Uri(Url), "osg_latest.zip");
+            string Url = webfetch.Fetch(URLLatestBinOSGrid);
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileCompleted += wc_DownloadFileCompleted;
+                wc.DownloadFileAsync(new Uri(Url), "osg_latest.zip");
+            }
             
             while(_done == false)
             {
@@ -317,7 +314,7 @@ namespace OSGridLauncher
             _done = true;
         }
 
-        private int lastPercent = 0;
+        private int lastPercent;
 
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
@@ -332,12 +329,12 @@ namespace OSGridLauncher
                 if (lastPercent != val)
                 {
                     lastPercent = val;
-                    SetStatus(lastPercent, "Downloading... " + (int) (percent*100) + "% Completed.");
+                    SetStatus(lastPercent, String.Format("Downloading... {0}% Completed.", (int)(percent * 100)));
                 }
             }
             else
             {
-                SetStatus(20, "Downloading... " + (e.BytesReceived/1024) + "KiB Recieved.");
+                SetStatus(20, String.Format("Downloading... {0}KiB Recieved.", (e.BytesReceived / 1024)));
             }
         }
 
@@ -357,7 +354,7 @@ namespace OSGridLauncher
                     const int max = 69;
                     double percent = item/(double) total;
                     int val = (int)((double)(max - min) * percent) + min;
-                    SetStatus(val, "Unpacking " + e.FileName + "...");
+                    SetStatus(val, String.Format("Unpacking {0}...", e.FileName));
                     // % Completed Bar End
 
                     e.Extract(OpenSimDir, ExtractExistingFileAction.OverwriteSilently);
@@ -380,14 +377,14 @@ namespace OSGridLauncher
                 {
                     if (file.EndsWith(".xml") || file.EndsWith(".exe") || file.EndsWith(".pdb") || file.EndsWith(".dll"))
                     {
-                        SetStatus(75, "Removing old '" + file + "'.");
+                        SetStatus(75, String.Format("Removing old '{0}'.", file));
                         File.Delete(file);
                     }
                 }
             }
         }
 
-        private void WriteRegionConfig(string regionName, string fname, string lname, bool pos, int x, int y, string estateName)
+        private void WriteRegionConfig(string regionName, bool pos, int x, int y)
         {
             string regionDir = Path.Combine(OpenSimBinDir, "Regions"); // Case sensitive: Bug Linux/OSX Regions Autoconfig Fails
 
@@ -403,7 +400,7 @@ namespace OSGridLauncher
             string coords;
 
             if (pos)
-                coords = WebFetch.Fetch(URLGetOSGridCoord);
+                coords = webfetch.Fetch(URLGetOSGridCoord);
             else
                 coords = String.Format("{0},{1}", x, y);
 
@@ -411,13 +408,7 @@ namespace OSGridLauncher
             string Location = coords;
 
             string ini =
-                "[" + regionName + "]\r\n" +
-                "RegionUUID=" + UUID + "\r\n" +
-                "Location=\"" + Location + "\"\r\n" +
-                "InternalAddress=" + GetLocalIP() + "\r\n" +
-                "InternalPort=9000\r\n" +
-                "AllowAlternatePorts=false\r\n" +
-                "ExternalHostName=" + GetInternetIP().ToString().Trim() + "\r\n\r\n";
+                String.Format("[{0}]\r\nRegionUUID={1}\r\nLocation=\"{2}\"\r\nInternalAddress={3}\r\nInternalPort=9000\r\nAllowAlternatePorts=false\r\nExternalHostName={4}\r\n\r\n", regionName, UUID, Location, GetLocalIP(), GetInternetIP().ToString().Trim());
 
             File.WriteAllText(fn, ini);
         }
@@ -432,7 +423,7 @@ namespace OSGridLauncher
 
         public static IPAddress GetInternetIP()
         {
-            string IP = WebFetch.Fetch(URLGetYourIP);
+            string IP = webfetch.Fetch(URLGetYourIP);
             return IPAddress.Parse(IP);
         }
 
@@ -477,22 +468,20 @@ namespace OSGridLauncher
 
                 // Try connect to our internet IP (testing NAT loopback+forwarding)
                 IPEndPoint ep = new IPEndPoint(GetInternetIP(), testPort);
-                TcpClient testClient = new TcpClient();
-
-                // "Connect" (or not.)
-                testClient.Connect(ep);
-
-                // Send some data, so it actually attempts connection.
-                testClient.GetStream().WriteByte(13);
-                testClient.GetStream().WriteByte(33);
-                testClient.GetStream().WriteByte(33);
-                testClient.GetStream().WriteByte(37);
-                
-                // Wait for data to come back
-                Thread.Sleep(1000);
-
-                // Cleanup
-                testClient.Close();
+                using (TcpClient testClient = new TcpClient())
+                {
+                    // "Connect" (or not.)
+                    testClient.Connect(ep);
+                    // Send some data, so it actually attempts connection.
+                    testClient.GetStream().WriteByte(13);
+                    testClient.GetStream().WriteByte(33);
+                    testClient.GetStream().WriteByte(33);
+                    testClient.GetStream().WriteByte(37);
+                    // Wait for data to come back
+                    Thread.Sleep(1000);
+                    // Cleanup
+                    testClient.Close();
+                }
 
                 return TestNetwork_Accepted;
             }

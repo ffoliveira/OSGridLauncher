@@ -1,7 +1,30 @@
-﻿using System;
+﻿// Author:
+//   Fernando F.Oliveira fernando@oliveira.eti.br
+//
+// Copyright (C) 2012 - Oliveira Lands
+//                               
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CookComputing.XmlRpc;
 using System.Collections;
 
@@ -22,22 +45,12 @@ namespace OSGridLauncher
 
     class OSRemoteAdmin 
     {
-        private string mServer;
-        private string mSenha;
 
-        public string server
-        {
-            get { return mServer; }
-            set { mServer = value; }
-        }
+        public string server { get; set; }
 
-        public string password
-        {
-            get { return mSenha; }
-            set { mSenha = value; }
-        }
+        public string password { get; set; }
 
-        public bool admin_shutdown(string password)
+        public static bool admin_shutdown(string password)
         {
             XmlRpcStruct shutAccept = new XmlRpcStruct();
             XmlRpcStruct shutParms = new XmlRpcStruct();
@@ -62,7 +75,7 @@ namespace OSGridLauncher
             return retShut;
         }
 
-        public bool admin_save_oar(string password, string nomeRegiao, string oarfile)
+        public static bool admin_save_oar(string password, string nomeRegiao, string oarfile)
         {
             XmlRpcStruct saveAccept = new XmlRpcStruct();
             XmlRpcStruct saveParms = new XmlRpcStruct();
@@ -98,7 +111,7 @@ namespace OSGridLauncher
             return retShut;
         }
 
-        public bool admin_restore_oar(string password, string nomeRegiao, string oarfile)
+        public static bool admin_restore_oar(string password, string nomeRegiao, string oarfile)
         {
             XmlRpcStruct saveAccept = new XmlRpcStruct();
             XmlRpcStruct saveParms = new XmlRpcStruct();
@@ -118,9 +131,7 @@ namespace OSGridLauncher
                 return false;
             }
 
-            bool retShut = true;
-
-            return retShut;
+            return true;
         }
     }
 

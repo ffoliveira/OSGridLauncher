@@ -75,15 +75,18 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\NetworkMessenger.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="mainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mainFrm.Designer.cs">
       <DependentUpon>mainFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MonoNatForward.cs" />
-    <Compile Include="OpenSimConfigurator.cs" />
-    <Compile Include="OSRemoteAdmin.cs" />
+    <Compile Include="classes\MonoNatForward.cs" />
+    <Compile Include="classes\OpenSimConfigurator.cs" />
+    <Compile Include="classes\OSRemoteAdmin.cs" />
     <Compile Include="portfwdFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,7 +123,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="webfetch.cs" />
+    <Compile Include="classes\webfetch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppIconOSG.ico" />

@@ -25,6 +25,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using Mono.Nat;
+using System;
 
 namespace OSGridLauncher
 {
@@ -50,9 +51,7 @@ namespace OSGridLauncher
             catch (MappingException)
             {
                 if (port != 11789)
-                    MessageBox.Show("Network autoconfiguration failed while trying to automatically forward port " +
-                                    port + " (" + (protocol == Protocol.Tcp ? "TCP" : "UDP") +
-                                    "). If you have manually forwarded this port, you can ignore this error.");
+                    MessageBox.Show(String.Format("Network autoconfiguration failed while trying to automatically forward port {0} ({1}). If you have manually forwarded this port, you can ignore this error.", port, (protocol == Protocol.Tcp ? "TCP" : "UDP")));
             }
         }
 

@@ -72,13 +72,14 @@
             this.tbsConfiguracao = new System.Windows.Forms.TabPage();
             this.pnlLancamento = new System.Windows.Forms.Panel();
             this.tbsAdministracao = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.btnRestoreOAR = new System.Windows.Forms.Button();
+            this.lsbArquivosBackup = new System.Windows.Forms.ListBox();
             this.btnBackupOAR = new System.Windows.Forms.Button();
             this.btnShutdown = new System.Windows.Forms.Button();
             this.edtNomeRegiao2 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.lsbArquivosBackup = new System.Windows.Forms.ListBox();
-            this.btnRestoreOAR = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
+            this.btnHideShowConsole = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsorButton)).BeginInit();
@@ -126,7 +127,6 @@
             this.edtNomeRegiao.Size = new System.Drawing.Size(292, 20);
             this.edtNomeRegiao.TabIndex = 2;
             this.toolDicas.SetToolTip(this.edtNomeRegiao, "Inform Region name to be registered at OSGrid");
-            this.edtNomeRegiao.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.edtNomeRegiao.Validating += new System.ComponentModel.CancelEventHandler(this.textBox1_Validating);
             this.edtNomeRegiao.Validated += new System.EventHandler(this.textBox1_Validated);
             // 
@@ -520,6 +520,7 @@
             // 
             // tbsAdministracao
             // 
+            this.tbsAdministracao.Controls.Add(this.btnHideShowConsole);
             this.tbsAdministracao.Controls.Add(this.label14);
             this.tbsAdministracao.Controls.Add(this.btnRestoreOAR);
             this.tbsAdministracao.Controls.Add(this.lsbArquivosBackup);
@@ -534,6 +535,40 @@
             this.tbsAdministracao.TabIndex = 1;
             this.tbsAdministracao.Text = "Region Administration";
             this.tbsAdministracao.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label14.Location = new System.Drawing.Point(8, 106);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 13);
+            this.label14.TabIndex = 25;
+            this.label14.Text = "Select the OAR File to Restore";
+            // 
+            // btnRestoreOAR
+            // 
+            this.btnRestoreOAR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRestoreOAR.Enabled = false;
+            this.btnRestoreOAR.Location = new System.Drawing.Point(334, 249);
+            this.btnRestoreOAR.Name = "btnRestoreOAR";
+            this.btnRestoreOAR.Size = new System.Drawing.Size(197, 23);
+            this.btnRestoreOAR.TabIndex = 9;
+            this.btnRestoreOAR.Text = "Restore to OAR File";
+            this.btnRestoreOAR.UseVisualStyleBackColor = true;
+            this.btnRestoreOAR.Click += new System.EventHandler(this.btnRestoreOAR_Click);
+            // 
+            // lsbArquivosBackup
+            // 
+            this.lsbArquivosBackup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lsbArquivosBackup.FormattingEnabled = true;
+            this.lsbArquivosBackup.Location = new System.Drawing.Point(8, 122);
+            this.lsbArquivosBackup.Name = "lsbArquivosBackup";
+            this.lsbArquivosBackup.Size = new System.Drawing.Size(523, 121);
+            this.lsbArquivosBackup.TabIndex = 8;
+            this.lsbArquivosBackup.SelectedIndexChanged += new System.EventHandler(this.lsbArquivosBackup_SelectedIndexChanged);
             // 
             // btnBackupOAR
             // 
@@ -573,39 +608,16 @@
             this.label13.TabIndex = 4;
             this.label13.Text = "Region Name";
             // 
-            // lsbArquivosBackup
+            // btnHideShowConsole
             // 
-            this.lsbArquivosBackup.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lsbArquivosBackup.FormattingEnabled = true;
-            this.lsbArquivosBackup.Location = new System.Drawing.Point(8, 122);
-            this.lsbArquivosBackup.Name = "lsbArquivosBackup";
-            this.lsbArquivosBackup.Size = new System.Drawing.Size(523, 121);
-            this.lsbArquivosBackup.TabIndex = 8;
-            this.lsbArquivosBackup.SelectedIndexChanged += new System.EventHandler(this.lsbArquivosBackup_SelectedIndexChanged);
-            // 
-            // btnRestoreOAR
-            // 
-            this.btnRestoreOAR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRestoreOAR.Enabled = false;
-            this.btnRestoreOAR.Location = new System.Drawing.Point(334, 249);
-            this.btnRestoreOAR.Name = "btnRestoreOAR";
-            this.btnRestoreOAR.Size = new System.Drawing.Size(197, 23);
-            this.btnRestoreOAR.TabIndex = 9;
-            this.btnRestoreOAR.Text = "Restore to OAR File";
-            this.btnRestoreOAR.UseVisualStyleBackColor = true;
-            this.btnRestoreOAR.Click += new System.EventHandler(this.btnRestoreOAR_Click);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label14.Location = new System.Drawing.Point(8, 106);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(152, 13);
-            this.label14.TabIndex = 25;
-            this.label14.Text = "Select the OAR File to Restore";
+            this.btnHideShowConsole.Location = new System.Drawing.Point(11, 32);
+            this.btnHideShowConsole.Name = "btnHideShowConsole";
+            this.btnHideShowConsole.Size = new System.Drawing.Size(197, 23);
+            this.btnHideShowConsole.TabIndex = 26;
+            this.btnHideShowConsole.Text = "Hide Console Window";
+            this.btnHideShowConsole.UseVisualStyleBackColor = true;
+            this.btnHideShowConsole.Visible = false;
+            this.btnHideShowConsole.Click += new System.EventHandler(this.btnHideShowConsole_Click);
             // 
             // mainFrm
             // 
@@ -626,6 +638,7 @@
             this.MaximizeBox = false;
             this.Name = "mainFrm";
             this.Text = "OSGrid Region Launcher";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainFrm_FormClosed);
             this.Load += new System.EventHandler(this.mainFrm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).EndInit();
@@ -693,6 +706,7 @@
         private System.Windows.Forms.ListBox lsbArquivosBackup;
         private System.Windows.Forms.Button btnRestoreOAR;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnHideShowConsole;
     }
 }
 

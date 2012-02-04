@@ -27,7 +27,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Nini.Config;
-using CookComputing.XmlRpc;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace OSGridLauncher
 {
@@ -37,7 +38,19 @@ namespace OSGridLauncher
         private string iniFileOpenSim;
         private string oarDir;
 
+        private Process oProcessoOS;
+        private classes.NetworkMessenger oNetMsg;
+
         private string senhaRegiao = "A17533g82Ol";
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+        
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public mainFrm()
         {
@@ -83,7 +96,7 @@ namespace OSGridLauncher
 
             osc.ConfigAndLaunch(edtNomeRegiao.Text, edtAvatarName.Text, edtAvatarFamilyName.Text, progressBar1, toolStripStatusLabel1,
                                 statusStrip1, checkBoxAutoposition.Checked, x, y, edtEstateName.Text, chkTryChangeRouter.Checked,
-                                senhaRegiao, pgcAdminRegiao);
+                                senhaRegiao, pgcAdminRegiao, oProcessoOS);
 
             //pgcAdminRegiao.SelectedTab = tbsAdministracao;
         }
@@ -166,15 +179,12 @@ namespace OSGridLauncher
             {
             }
 
+            oNetMsg = new classes.NetworkMessenger() { Active = true };
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.osgrid.org/");
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
         }
 
         private void textBoxX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -324,7 +334,7 @@ namespace OSGridLauncher
         {
             IConfigSource source = new IniConfigSource(iniFileRegiao);
 
-            source.Configs[0].Set("Location", textBoxX.Text + "," + textBoxY.Text);
+            source.Configs[0].Set("Location", String.Format("{0},{1}", textBoxX.Text, textBoxY.Text));
             source.Save();
 
             btnCancelXY_Click(sender, e);
@@ -385,9 +395,9 @@ namespace OSGridLauncher
 
         private void btnShutdown_Click(object sender, EventArgs e)
         {
-            OSRemoteAdmin osr = new OSRemoteAdmin();
+            
 
-            if (osr.admin_shutdown(senhaRegiao))
+            if (OSRemoteAdmin.admin_shutdown(senhaRegiao))
             {
                 MessageBox.Show("Shutdown accepted and in progress.");
             }
@@ -401,9 +411,9 @@ namespace OSGridLauncher
         {
             string nomeOAR = String.Format("{0:yyyy-MM-dd-HH-mm}.oar", DateTime.Now);
 
-            OSRemoteAdmin osr = new OSRemoteAdmin();
 
-            if (osr.admin_save_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(oarDir+"\\"+nomeOAR)))
+
+            if (OSRemoteAdmin.admin_save_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(String.Format("{0}\\{1}", oarDir, nomeOAR))))
             {
                 MessageBox.Show(String.Format("OAR Backup is running. File : {0}", nomeOAR));
                 ReloadOARFileList();
@@ -421,9 +431,9 @@ namespace OSGridLauncher
 
             if (MessageBox.Show(String.Format("Confirm restore the OAR file {0} ?\n\nCurrent content will be LOST !", nomeOAR), "Restore OAR File", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
-                OSRemoteAdmin osr = new OSRemoteAdmin();
 
-                if (osr.admin_restore_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(oarDir+"\\"+nomeOAR)))
+
+                if (OSRemoteAdmin.admin_restore_oar(senhaRegiao, edtNomeRegiao.Text, SOPath(String.Format("{0}\\{1}", oarDir, nomeOAR))))
                 {
                     MessageBox.Show(String.Format("OAR Restore is running. File : {0}", nomeOAR));
                 }
@@ -437,6 +447,20 @@ namespace OSGridLauncher
         private void lsbArquivosBackup_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnRestoreOAR.Enabled = (lsbArquivosBackup.SelectedIndex >= 0);
+        }
+
+        private void mainFrm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            oNetMsg.Active = false;
+        }
+
+        private void btnHideShowConsole_Click(object sender, EventArgs e)
+        {
+            if (oProcessoOS != null)
+            {
+                // not working
+                // ShowWindow(oProcessoOS.MainWindowHandle, SW_HIDE);
+            }
         }
 
     }
