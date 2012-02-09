@@ -73,10 +73,18 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\NetworkMessenger.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="classes\utilities.cs" />
+    <Compile Include="frames\frameRegionConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frames\frameRegionConfig.Designer.cs">
+      <DependentUpon>frameRegionConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="mainFrm.cs">
       <SubType>Form</SubType>
@@ -95,6 +103,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frames\frameRegionConfig.resx">
+      <DependentUpon>frameRegionConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mainFrm.resx">
       <DependentUpon>mainFrm.cs</DependentUpon>
     </EmbeddedResource>

@@ -361,7 +361,7 @@ namespace OSGridLauncher
                 }
             }
 
-            File.WriteAllBytes( mainFrm.SOPath( OpenSimBinDir + "\\OpenSim.exe" ), Resources.OpenSim);
+            File.WriteAllBytes( classes.utilities.SOPath( OpenSimBinDir + "\\OpenSim.exe" ), Resources.OpenSim);
 
         }
 
