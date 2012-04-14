@@ -138,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppIconOSG.ico" />
-    <None Include="Resources\OpenSim.exe" />
     <None Include="Resources\BackgroundImage.png" />
   </ItemGroup>
   <ItemGroup>

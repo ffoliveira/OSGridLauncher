@@ -219,12 +219,15 @@ namespace OSGridLauncher
                 source.Configs["RemoteAdmin"].Set("enabled", "false");
             }
 
-            if (source.Configs["EstateDefaults"] == null)
+            if (source.Configs["Estates"] == null)
             {
-                source.Configs.Add("EstateDefaults");
+                source.Configs.Add("Estates");
             }
-            source.Configs["EstateDefaults"].Set("EstateName", pEstateNameDefault);
-            source.Configs["EstateDefaults"].Set("EstateOwner", pEstateOwnerDefault);
+            source.Configs["Estates"].Set("DefaultEstateName", pEstateNameDefault);
+            source.Configs["Estates"].Set("DefaultEstateOwnerName", pEstateOwnerDefault);
+
+            source.Configs["Startup"].Set("GenerateMaptiles", "true");
+            source.Configs["Startup"].Set("MapImageModule", "Warp3DImageModule");
 
             source.Save();
         }
@@ -360,8 +363,6 @@ namespace OSGridLauncher
                     e.Extract(OpenSimDir, ExtractExistingFileAction.OverwriteSilently);
                 }
             }
-
-            File.WriteAllBytes( classes.utilities.SOPath( OpenSimBinDir + "\\OpenSim.exe" ), Resources.OpenSim);
 
         }
 

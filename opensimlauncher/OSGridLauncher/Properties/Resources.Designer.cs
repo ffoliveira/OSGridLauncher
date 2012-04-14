@@ -66,12 +66,5 @@ namespace OSGridLauncher.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        internal static byte[] OpenSim {
-            get {
-                object obj = ResourceManager.GetObject("OpenSim", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

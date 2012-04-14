@@ -85,13 +85,16 @@ namespace OSGridLauncher.frames
                     string[] locs = oIniRegion.Configs[0].GetString("Location").Split(',');
                     textBoxX.Text = locs[0];
                     textBoxY.Text = locs[1];
+                    
+                    checkBoxAutoposition.CheckState = CheckState.Indeterminate;
                 }
+
 
                 IConfigSource oIniOS = new IniConfigSource(iniFileOpenSim);
 
-                if (oIniOS.Configs["EstateDefaults"] != null)
+                if (oIniOS.Configs["Estates"] != null)
                 {
-                    string estateOwner = oIniOS.Configs["EstateDefaults"].GetString("EstateOwner", "");
+                    string estateOwner = oIniOS.Configs["Estates"].GetString("DefaultEstateOwnerName", "");
                     string[] ownerNames = estateOwner.Split(' ');
 
                     if (ownerNames.Length == 2)
@@ -99,7 +102,7 @@ namespace OSGridLauncher.frames
                         edtAvatarName.Text = ownerNames[0];
                         edtAvatarFamilyName.Text = ownerNames[1];
                     }
-                    edtEstateName.Text = oIniOS.Configs["EstateDefaults"].GetString("EstateName", "");
+                    edtEstateName.Text = oIniOS.Configs["Estates"].GetString("DefaultEstateName", "");
                 }
 
                 checkBoxAutoposition.Enabled = false;
@@ -286,6 +289,7 @@ namespace OSGridLauncher.frames
         {
             btnGravaXY.Visible = false;
             btnCancelXY.Visible = false;
+
             checkBoxAutoposition.Enabled = false;
 
             CarregarConfiguracoes();
@@ -295,6 +299,7 @@ namespace OSGridLauncher.frames
         {
             textBoxX.ReadOnly = false;
             textBoxY.ReadOnly = false;
+            
             checkBoxAutoposition.Enabled = true;
 
             textBoxY.Focus();

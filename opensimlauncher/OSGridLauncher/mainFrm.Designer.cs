@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainFrm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label9 = new System.Windows.Forms.Label();
             this.textInternetIP = new System.Windows.Forms.TextBox();
@@ -47,9 +48,8 @@
             this.pgcAllRegions = new System.Windows.Forms.TabControl();
             this.tabDefault = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label15 = new System.Windows.Forms.Label();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.chkTryChangeRouter = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.frameRegionConfig1 = new OSGridLauncher.frames.frameRegionConfig();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -63,14 +63,17 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel2});
             this.statusStrip1.Location = new System.Drawing.Point(0, 439);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(547, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStripStatusLabel1
             // 
@@ -151,7 +154,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(25, 13);
             this.lblVersion.TabIndex = 10;
-            this.lblVersion.Text = "r0.7";
+            this.lblVersion.Text = "r0.8";
             // 
             // OSGridLaunch
             // 
@@ -177,6 +180,7 @@
             this.sponsorButton.TabIndex = 11;
             this.sponsorButton.TabStop = false;
             this.toolDicas.SetToolTip(this.sponsorButton, "Click to visit SimHost website");
+            this.sponsorButton.Visible = false;
             this.sponsorButton.Click += new System.EventHandler(this.sponsorButton_Click);
             // 
             // sponsor2Button
@@ -228,21 +232,6 @@
             this.panel1.Size = new System.Drawing.Size(547, 70);
             this.panel1.TabIndex = 16;
             // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(11, 9);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(73, 13);
-            this.label15.TabIndex = 27;
-            this.label15.Text = "OSGrid Info";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
-            // 
             // chkTryChangeRouter
             // 
             this.chkTryChangeRouter.AutoSize = true;
@@ -253,6 +242,16 @@
             this.chkTryChangeRouter.Text = "Try to configure my Router using uPNP (must be enabled)";
             this.chkTryChangeRouter.UseVisualStyleBackColor = true;
             this.chkTryChangeRouter.CheckedChanged += new System.EventHandler(this.chkTryChangeRouter_CheckedChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(11, 9);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(73, 13);
+            this.label15.TabIndex = 27;
+            this.label15.Text = "OSGrid Info";
             // 
             // frameRegionConfig1
             // 
