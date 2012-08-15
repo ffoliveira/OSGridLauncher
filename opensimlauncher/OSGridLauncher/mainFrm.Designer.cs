@@ -51,7 +51,6 @@
             this.chkTryChangeRouter = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.frameRegionConfig1 = new OSGridLauncher.frames.frameRegionConfig();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsorButton)).BeginInit();
@@ -154,7 +153,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(25, 13);
             this.lblVersion.TabIndex = 10;
-            this.lblVersion.Text = "r0.8";
+            this.lblVersion.Text = "r0.9";
             // 
             // OSGridLaunch
             // 
@@ -283,8 +282,6 @@
             this.Text = "OSGrid Region Launcher";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainFrm_FormClosed);
             this.Load += new System.EventHandler(this.mainFrm_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OSGridLaunch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sponsorButton)).EndInit();

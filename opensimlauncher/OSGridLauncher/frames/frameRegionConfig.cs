@@ -138,7 +138,10 @@ namespace OSGridLauncher.frames
 
             OpenSimConfigurator osc = new OpenSimConfigurator();
 
-            osc.ConfigAndLaunch(edtNomeRegiao.Text, edtAvatarName.Text, edtAvatarFamilyName.Text, progressBarLauncher, (ToolStripStatusLabel)parentStatusStrip.Items[0],
+            ToolStripStatusLabel tspLb = (parentStatusStrip.Items.Count > 0 ? (ToolStripStatusLabel)parentStatusStrip.Items[0] : new ToolStripStatusLabel(""));
+
+
+            osc.ConfigAndLaunch(edtNomeRegiao.Text, edtAvatarName.Text, edtAvatarFamilyName.Text, progressBarLauncher, tspLb,
                                 parentStatusStrip, checkBoxAutoposition.Checked, x, y, edtEstateName.Text, chkTryChangeRouter,
                                 senhaRegiao, pgcAdminRegiao, oProcessoOS);
 

@@ -40,11 +40,11 @@ namespace OSGridLauncher
         {
             InitializeComponent();
 
+            frameRegionConfig1.parentStatusStrip = statusStrip1;
         }
 
         private void mainFrm_Load(object sender, EventArgs e)
         {
-            frameRegionConfig1.parentStatusStrip = statusStrip1;
             frameRegionConfig1.CarregarConfiguracoes();
 
             oNetMsg = new classes.NetworkMessenger() { Active = true };
@@ -82,7 +82,7 @@ namespace OSGridLauncher
 
         private void sponsor2Button_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://oliveira.eti.br/");
+            System.Diagnostics.Process.Start("http://oliveira.eti.br/hosting-plans.php");
         }
 
         private void OSGridLaunch_Click(object sender, EventArgs e)
